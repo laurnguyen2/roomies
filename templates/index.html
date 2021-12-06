@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+    <h3>{{username}}'s Portfolio</h3>
+
+    <table class="table tablestriped">
+        <thead>
+            <tr>
+                <th class="text-start">Company</th>
+                <th class="text-start">Stock Symbol</th>
+                <th class="text-end">Current Price</th>
+                <th class="text-end">Shares Owned</th>
+                <th class="text-end">Total Equity</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for stock in stocks %}
+            <tr>
+                <td class="text-start">{{ stock["name"] }}</td>
+                <td class="text-start">{{ stock["symbol"] }}</td>
+                <td class="text-end">{{ stock["price"]|usd}}</td>
+                <td class="text-end">{{ stock["shares"] }}</td>
+                <td class="text-end">{{ stock["value"]|usd }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="4">Total Portfolio Value:</td>
+                <td class="border-0 text-end">{{ total|usd }}</td>
+            </tr>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="4">Remaining cash:</td>
+                <td class="border-0 text-end">{{ remain|usd }}</td>
+            </tr>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="4">Total Wealth:</td>
+                <td class="border-0 w-bold text-end">{{ (remain + total)|usd }}</td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
