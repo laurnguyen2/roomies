@@ -56,13 +56,12 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    """Show portfolio of stocks"""
-    name = db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])[0]['username']
-    cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])[0]['cash']
-    stocks = create_portfolio()["stocks"]
-    total = create_portfolio()["total"]
-
-    return render_template("index.html", username=name, remain=cash, stocks=stocks, total=total)
+    """Form"""
+    if request.method == "POST":
+        db.execute()
+        return render_template("buy.html")
+    else:
+        return render_template("buy.html")
 
 
 @app.route("/buy", methods=["GET", "POST"])
