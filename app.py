@@ -26,25 +26,6 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///roomies.db")
 
-def create_portfolio():
-    rows = db.execute("SELECT symbol, SUM(shares) AS shares_owned FROM transactions WHERE user_id = ? GROUP BY symbol HAVING SUM(shares) > 0", session["user_id"])
-    
-    portfolio = {}
-    stocks = []
-    total = 0
-    
-    for row in rows:
-        stock = lookup(row["symbol"])
-        stock["shares"] = row["shares_owned"]
-        stock["value"] = stock["shares"] * stock["price"]
-        total += stock["value"]
-        stocks.append(stock)
-    
-    portfolio["stocks"] = stocks
-    portfolio["total"] = total
-    
-    return portfolio
-
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -123,56 +104,6 @@ def match():
         return render_template("match.html", matchName = matchedUser, matchGender = selectedUser[0]["Gender"], matchYear = selectedUser[0]["Year"], 
         matchPers = selectedUser[0]["Personality"], matchSleep = selectedUser[0]["Sleep"])
 
-@app.route("/buy", methods=["GET", "POST"])
-@login_required
-def buy():
-    """Buy shares of stock"""
-    if request.method == "POST":
-
-        if not request.form.get("symbol"):
-            return apology("Please input a symbol", 400)
-        
-        stock = lookup(request.form.get("symbol"))
-        if stock is None:
-            return apology("Stock not found", 400)
-        
-        if not request.form.get("shares") or not request.form.get("shares").isnumeric():
-            return apology("Please provide number of shares to purchase", 400)
-        shares = float(request.form.get("shares"))
-        if int(shares) != shares or int(shares) <= 0:
-            return apology("Shares must be a positive integer", 400)
-
-        sum = stock["price"] * int(shares)
-        cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])[0]["cash"]
-       
-        if cash >= sum:
-            db.execute("INSERT INTO transactions (user_id, symbol, shares, price, transaction_value) VALUES (?, ?, ?, ?, ?)", session["user_id"], stock["symbol"], shares, stock["price"], sum)
-            db.execute("UPDATE users SET cash = ? WHERE id = ?", cash - sum, session["user_id"])
-
-            return redirect("/")
-
-        else:
-            return apology("Insufficient funds", 400)
-
-    else:
-        return render_template("buy.html")
-
-
-@app.route("/history")
-@login_required
-def history():
-    """Show history of transactions"""
-    rows = db.execute("SELECT symbol, price, shares, transaction_time FROM transactions WHERE user_id = ?", session["user_id"])
-
-    for row in rows:
-        if row["shares"] < 0:
-            row["type"] = "sell"
-        else:
-            row["type"] = "buy"
-
-    return render_template("history.html", transactions=rows)
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -222,25 +153,6 @@ def logout():
     # Redirect user to login form
     return redirect("/")
 
-
-@app.route("/quote", methods=["GET", "POST"])
-@login_required
-def quote():
-    """Get stock quote."""
-    if request.method == "POST":
-
-        if not request.form.get("symbol"):
-            return apology("Please input a symbol", 400)
-        
-        stock = lookup(request.form.get("symbol"))
-        if stock is None:
-            return apology("Stock not found", 400)
-
-        return render_template("quoted.html", symbol=stock["symbol"], stock_name=stock["name"], current_price=usd(stock["price"]))
-    
-    else:
-        return render_template("quote.html")
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     global idVal
@@ -276,66 +188,6 @@ def register():
 
     else:
         return render_template("register.html")
-
-
-@app.route("/sell", methods=["GET", "POST"])
-@login_required
-def sell():
-    """Sell shares of stock"""
-    if request.method == "POST":
-        if not request.form.get("symbol"):
-            return apology("Please input a symbol", 400)
-        stock = lookup(request.form.get("symbol"))
-        if stock is None:
-            return apology("Stock not found", 400)
-        
-        if not request.form.get("shares"):
-            return apology("Please provide number of shares", 400)
-        shares = float(request.form.get("shares"))
-        if int(shares) != shares or int(shares) <= 0:
-            return apology("Shares must be a positive integer", 400)
-
-        owned = db.execute("SELECT SUM(shares) FROM transactions WHERE user_id = ? AND symbol = ?", session["user_id"], stock["symbol"])
-        if len(owned) != 1:
-            return apology("You do not own this stock", 400)
-        num_owned = owned[0]["SUM(shares)"]
-        if num_owned < int(shares):
-            return apology("You do not have enough shares", 400)
-
-        sum = stock["price"] * int(shares)
-        cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])[0]["cash"]
-       
-        db.execute("INSERT INTO transactions (user_id, symbol, shares, price, transaction_value) VALUES (?, ?, ?, ?, ?)", session["user_id"], stock["symbol"], -shares, stock["price"], -sum)
-        db.execute("UPDATE users SET cash = ? WHERE id = ?", cash + sum, session["user_id"])
-        
-        return redirect("/")
-
-    else:
-        symbols = []
-        stocks = create_portfolio()["stocks"]
-        for stock in stocks:
-            symbols.append(stock["symbol"])
-        return render_template("sell.html", symbols=symbols)
-
-@app.route("/cash", methods=["GET", "POST"])
-@login_required
-def cash():
-    if request.method == "POST":
-        
-        if not request.form.get("cash") or not request.form.get("cash").isnumeric():
-            return apology("Please input a valid amount", 400)
-        add_cash = float(request.form.get("cash"))
-        if add_cash <= 0:
-            return apology("Amount must be positive", 400)
-
-        current_cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])[0]["cash"]
-        db.execute("UPDATE users SET cash = ? WHERE id = ?", add_cash + current_cash, session["user_id"])
-
-        return redirect("/")
-
-    else:
-        current_cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])[0]["cash"]
-        return render_template("cash.html", cash=current_cash)
 
 def errorhandler(e):
     """Handle error"""
