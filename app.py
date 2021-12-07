@@ -73,10 +73,11 @@ def quiz():
         print("id")
         print(session["user_id"])
 
-        db.execute("UPDATE users SET Name = ?, Gender = ?, Year = ?, Personality = ?, Sleep = ? WHERE username = ?", name, gender, year, personality, sleep, session["user_id"])
+        db.execute("UPDATE users SET Name = ?, Gender = ?, Year = ?, Personality = ?, Sleep = ?, takenForm = 1 WHERE username = ?", name, gender, year, personality, sleep, session["user_id"])
         rows = db.execute("SELECT * FROM users WHERE username = ?", session["user_id"])
         print("after quiz sql")
         print(rows[0])
+
         return render_template("index.html")
     else:
         return render_template("quiz.html")
@@ -86,35 +87,40 @@ def quiz():
 def match():
     numOfUsers = db.execute("SELECT COUNT(username) FROM users")[0]['COUNT(username)']
     currentUser = db.execute("SELECT * FROM users WHERE username = ?", session["user_id"])
+    userBool = currentUser[0]["takenForm"]
     maxMatches = 0
     matchedUser = ""
     print(currentUser)
-    for i in range(1, numOfUsers+1):
-        selectedUser = db.execute("SELECT * FROM users WHERE ID = ?", i)
-        sameAnswers = 0
-        print("current user")
-        print(currentUser)
-        if selectedUser[0]["ID"] != currentUser[0]["ID"]:
-            print("selected user")
-            print(selectedUser)
-            # Gender
-            if selectedUser[0]["Gender"] == currentUser[0]["Gender"]:
-                sameAnswers += 1
-            # Year
-            if selectedUser[0]["Year"] == currentUser[0]["Year"]:
-                sameAnswers += 1
-            # Personality
-            if selectedUser[0]["Personality"] == currentUser[0]["Personality"]:
-                sameAnswers += 1
-            # Sleep
-            if selectedUser[0]["Sleep"] == currentUser[0]["Sleep"]:
-                sameAnswers += 1
-        if sameAnswers > maxMatches:
-            maxMatches = sameAnswers
-            matchedUser = selectedUser[0]["Name"]
-        print(matchedUser)
-    return render_template("match.html", matchName = matchedUser, matchGender = selectedUser[0]["Gender"], matchYear = selectedUser[0]["Year"], 
-    matchPers = selectedUser[0]["Personality"], matchSleep = selectedUser[0]["Sleep"])
+
+    if userBool == 0:
+        return apology("Please fill out quiz first", 400)
+    else:
+        for i in range(1, numOfUsers+1):
+            selectedUser = db.execute("SELECT * FROM users WHERE ID = ?", i)
+            sameAnswers = 0
+            print("current user")
+            print(currentUser)
+            if selectedUser[0]["ID"] != currentUser[0]["ID"]:
+                print("selected user")
+                print(selectedUser)
+                # Gender
+                if selectedUser[0]["Gender"] == currentUser[0]["Gender"]:
+                    sameAnswers += 1
+                # Year
+                if selectedUser[0]["Year"] == currentUser[0]["Year"]:
+                    sameAnswers += 1
+                # Personality
+                if selectedUser[0]["Personality"] == currentUser[0]["Personality"]:
+                    sameAnswers += 1
+                # Sleep
+                if selectedUser[0]["Sleep"] == currentUser[0]["Sleep"]:
+                    sameAnswers += 1
+            if sameAnswers > maxMatches:
+                maxMatches = sameAnswers
+                matchedUser = selectedUser[0]["Name"]
+            print(matchedUser)
+        return render_template("match.html", matchName = matchedUser, matchGender = selectedUser[0]["Gender"], matchYear = selectedUser[0]["Year"], 
+        matchPers = selectedUser[0]["Personality"], matchSleep = selectedUser[0]["Sleep"])
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
@@ -254,7 +260,7 @@ def register():
         
         if password == confirmation:
             password_hash = generate_password_hash(password)
-            db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", name, password_hash)
+            db.execute("INSERT INTO users (username, hash, takenForm) VALUES(?, ?, 0)", name, password_hash)
 
             session["user_id"] = name
 

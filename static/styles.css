@@ -2,6 +2,7 @@
 nav .navbar-brand
 {
     font-size: xx-large;
+    color: #163e7d;
 }
 
 /* Colors for brand */
@@ -63,7 +64,7 @@ nav .navbar-brand .green
     font-size: 20px;
     }
 
-    
+
   body {
       background-color: #FAAF95;
   }
@@ -72,10 +73,21 @@ nav .navbar-brand .green
     text-decoration: underline;
   }
   
+  
   .pinkBox {
     padding-bottom: 20px;
     padding-top: 10px;
     background-color: #f79d92;
     margin-left: 100px;
     margin-right: 100px;
+  }
+
+  .heading {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+  }
+
+  .red{
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-size: 25px;
   }
