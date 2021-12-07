@@ -64,8 +64,8 @@ def index():
 def quiz():
     """Quiz"""
     if request.method == "POST":
-        # name = request.form.get("name")
-        # print(name)
+        name = request.form.get("name")
+        print("test")
         # gender = request.form.get("gender")
         # year = request.form.get("year")
         # personality = request.form.get("personality")
