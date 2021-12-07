@@ -77,7 +77,6 @@ def quiz():
         rows = db.execute("SELECT * FROM users WHERE username = ?", session["user_id"])
         print("after quiz sql")
         print(rows[0])
-        # db.execute("INSERT INTO users (Name, Gender, Year, Personality, Sleep) VALUES (?, ?, ?, ?, ?)", name, gender, year, personality, sleep)
         return render_template("index.html")
     else:
         return render_template("quiz.html")
@@ -92,8 +91,11 @@ def match():
     for i in range(1, numOfUsers+1):
         selectedUser = db.execute("SELECT * FROM users WHERE ID = ?", i)
         sameAnswers = 0
+        print("current user")
+        print(currentUser)
         if selectedUser[0]["ID"] != currentUser[0]["ID"]:
-            # keep track of nubmer of same answers
+            print("selected user")
+            print(selectedUser)
             # Gender
             if selectedUser[0]["Gender"] == currentUser[0]["Gender"]:
                 sameAnswers += 1
@@ -110,7 +112,8 @@ def match():
             maxMatches = sameAnswers
             matchedUser = selectedUser[0]["Name"]
         print(matchedUser)
-    return render_template("match.html", match = matchedUser)
+    return render_template("match.html", matchName = matchedUser, matchGender = selectedUser[0]["Gender"], matchYear = selectedUser[0]["Year"], 
+    matchPers = selectedUser[0]["Personality"], matchSleep = selectedUser[0]["Sleep"])
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required

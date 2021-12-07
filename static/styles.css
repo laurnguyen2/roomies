@@ -22,13 +22,8 @@ nav .navbar-brand .green
     color: #2e944b;
 }
 
-/* Button */
-a.button {
-    appearance: button;
-}
-
 .orangeButton {
-    background-color: #F18E7C;
+    background-color: #F67282;
     border-color: #dbdbdb;
     border-width: 1px;
     color: black;
@@ -40,4 +35,8 @@ a.button {
     padding-top: calc(.5em - 1px);
     text-align: center;
     white-space: nowrap;
+  }
+
+  body {
+      background-color: #FAAF95;
   }
