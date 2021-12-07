@@ -23,7 +23,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///finance.db")
+db = SQL("sqlite:///roomies.db")
 
 def create_portfolio():
     rows = db.execute("SELECT symbol, SUM(shares) AS shares_owned FROM transactions WHERE user_id = ? GROUP BY symbol HAVING SUM(shares) > 0", session["user_id"])
@@ -53,8 +53,11 @@ def after_request(response):
     return response
 
 
-@app.route("/")
-@login_required
+@app.route("/index")
+def index():
+    return render_template("index.html")
+
+@app.route("/quiz", methods=["GET", "POST"])
 def quiz():
     """Quiz"""
     if request.method == "POST":
@@ -65,7 +68,7 @@ def quiz():
         sleep = request.form.get("sleep")
 
         db.execute("INSERT INTO profiles VALUES (?, ?, ?, ?, ?)", name, gender, year, personality, sleep)
-        return render_template("buy.html")
+        return render_template("index.html")
     else:
         return render_template("quiz.html")
 
@@ -149,7 +152,7 @@ def login():
         session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
-        return redirect("/")
+        return render_template("index.html")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -211,7 +214,7 @@ def register():
 
             session["user_id"] = user
 
-            return redirect("/")
+            return render_template("index.html")
 
         else:
             return apology("Passwords must match", 400)
