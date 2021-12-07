@@ -84,9 +84,33 @@ def quiz():
 
 @app.route("/match")
 def match():
-    numOfUsers = db.execute("SELECT COUNT(username) FROM users")
-    print(numOfUsers["COUNT(username)"])
-    return render_template("match.html")
+    numOfUsers = db.execute("SELECT COUNT(username) FROM users")[0]['COUNT(username)']
+    currentUser = db.execute("SELECT * FROM users WHERE username = ?", session["user_id"])
+    maxMatches = 0
+    matchedUser = ""
+    print(currentUser)
+    for i in range(1, numOfUsers+1):
+        selectedUser = db.execute("SELECT * FROM users WHERE ID = ?", i)
+        sameAnswers = 0
+        if selectedUser[0]["ID"] != currentUser[0]["ID"]:
+            # keep track of nubmer of same answers
+            # Gender
+            if selectedUser[0]["Gender"] == currentUser[0]["Gender"]:
+                sameAnswers += 1
+            # Year
+            if selectedUser[0]["Year"] == currentUser[0]["Year"]:
+                sameAnswers += 1
+            # Personality
+            if selectedUser[0]["Personality"] == currentUser[0]["Personality"]:
+                sameAnswers += 1
+            # Sleep
+            if selectedUser[0]["Sleep"] == currentUser[0]["Sleep"]:
+                sameAnswers += 1
+        if sameAnswers > maxMatches:
+            maxMatches = sameAnswers
+            matchedUser = selectedUser[0]["Name"]
+        print(matchedUser)
+    return render_template("match.html", match = matchedUser)
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
