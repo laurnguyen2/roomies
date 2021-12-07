@@ -6,29 +6,30 @@
 
 {% block main %}
 <h2> Please fill out this form: </h2>
-<form action="/" method= "POST">
+<form action="/quiz" method= "POST">
 <h3> Name: </h3>
 <input name= "name" placeholder="Name" type= "text">
 
 <h3>Gender:</h3>
-    <button class = "m">Male</button>
-    <button class = "f">Female</button>
+    <input type="radio" name="gender" value="M">Male<br>
+    <input type="radio" name="gender" value="F">Female<br>
        
 <h3>Year:</h3>
-    <button class = "1">First Year</button>
-    <button class = "2">Second Year</button>
-    <button class = "3">Third Year</button>
-    <button class = "4">Fourth Year</button>
+    <input type= "radio" name= "year" value= "1">First Year<br>
+    <input type= "radio" name= "year" value="2">Second Year<br>
+    <input type= "radio" name= "year" value= "3">Third Year<br>
+    <input type= "radio" name= "year" value= "4">Fourth Year<br>
 
 <h3>Personality type:</h3>
-    <button class = "intro">Introvert</button>
-    <button class = "extro">Extrovert</button>
-    <button class = "ambi">Ambivert</button>
+    <input type="radio" name="personality" value="intro">Introvert<br>
+    <input type="radio" name="personality" value="extro">Extrovert<br>
+    <input type="radio" name="personality" value="ambi">Ambivert<br>
 
 <h3>Sleep schedule:</h3>
-    <button class = "night">Night Owl</button>
-    <button class = "morn">Early Bird</button>
-
+    <input type="radio" name="sleep" value="night">Night Owl<br>
+    <input type="radio" name="sleep" value="early">Early Bird<br>
+    
+<br style = "line-height: 500;">
 <input type= "submit" value= "Submit">
 </form>
 

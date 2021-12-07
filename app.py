@@ -52,6 +52,9 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 @app.route("/index")
 def index():
@@ -61,13 +64,14 @@ def index():
 def quiz():
     """Quiz"""
     if request.method == "POST":
-        name = request.form.get("name")
-        gender = request.form.get("gender")
-        year = request.form.get("year")
-        personality = request.form.get("personality")
-        sleep = request.form.get("sleep")
+        # name = request.form.get("name")
+        # print(name)
+        # gender = request.form.get("gender")
+        # year = request.form.get("year")
+        # personality = request.form.get("personality")
+        # sleep = request.form.get("sleep")
 
-        db.execute("INSERT INTO profiles VALUES (?, ?, ?, ?, ?)", name, gender, year, personality, sleep)
+        # db.execute("INSERT INTO profiles VALUES (?, ?, ?, ?, ?)", name, gender, year, personality, sleep)
         return render_template("index.html")
     else:
         return render_template("quiz.html")
