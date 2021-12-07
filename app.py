@@ -65,13 +65,19 @@ def quiz():
     """Quiz"""
     if request.method == "POST":
         name = request.form.get("name")
-        print("test")
-        # gender = request.form.get("gender")
-        # year = request.form.get("year")
-        # personality = request.form.get("personality")
-        # sleep = request.form.get("sleep")
+        gender = request.form.get("gender")
+        year = request.form.get("year")
+        personality = request.form.get("personality")
+        sleep = request.form.get("sleep")
 
-        # db.execute("INSERT INTO profiles VALUES (?, ?, ?, ?, ?)", name, gender, year, personality, sleep)
+        print("id")
+        print(session["user_id"])
+
+        db.execute("UPDATE users SET Name = ?, Gender = ?, Year = ?, Personality = ?, Sleep = ? WHERE username = ?", name, gender, year, personality, sleep, session["user_id"])
+        rows = db.execute("SELECT * FROM users WHERE username = ?", session["user_id"])
+        print("after quiz sql")
+        print(rows[0])
+        # db.execute("INSERT INTO users (Name, Gender, Year, Personality, Sleep) VALUES (?, ?, ?, ?, ?)", name, gender, year, personality, sleep)
         return render_template("index.html")
     else:
         return render_template("quiz.html")
@@ -153,7 +159,10 @@ def login():
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0]["username"]
+
+        print("sql call")
+        print(rows[0])
 
         # Redirect user to home page
         return render_template("index.html")
