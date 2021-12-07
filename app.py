@@ -55,13 +55,19 @@ def after_request(response):
 
 @app.route("/")
 @login_required
-def index():
-    """Form"""
+def quiz():
+    """Quiz"""
     if request.method == "POST":
-        db.execute()
+        name = request.form.get("name")
+        gender = request.form.get("gender")
+        year = request.form.get("year")
+        personality = request.form.get("personality")
+        sleep = request.form.get("sleep")
+
+        db.execute("INSERT INTO profiles VALUES (?, ?, ?, ?, ?)", name, gender, year, personality, sleep)
         return render_template("buy.html")
     else:
-        return render_template("buy.html")
+        return render_template("quiz.html")
 
 
 @app.route("/buy", methods=["GET", "POST"])
