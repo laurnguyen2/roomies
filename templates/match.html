@@ -1,6 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ROOMIES
+{% endblock %}
+
+{% block main %}
+
 <h2> Your Match is: </h2>
-{{matchName}}
-{{matchGender}}
-{{matchYear}}
-{{matchPers}}
-{{matchSleep}}
+<h4>{{matchName}}</h4>
+<br>
+
+<h3>Gender: </h3>
+<h4>{{matchGender}}</h4>
+
+<br>
+
+<h3>Year: </h3>
+<h4>{{matchYear}}</h4>
+<br>
+
+<h3>Personality: </h3>
+<h4>{{matchPers}}</h4>
+<br>
+
+<h3>Sleep: </h3>
+<h4>{{matchSleep}}</h4>
+
+{% endblock %} 
