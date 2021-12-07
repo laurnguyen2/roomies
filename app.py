@@ -82,6 +82,11 @@ def quiz():
     else:
         return render_template("quiz.html")
 
+@app.route("/match")
+def match():
+    numOfUsers = db.execute("SELECT COUNT(username) FROM users")
+    print(numOfUsers["COUNT(username)"])
+    return render_template("match.html")
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
@@ -201,12 +206,10 @@ def quote():
     else:
         return render_template("quote.html")
 
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
     if request.method == "POST":
-        
         if not request.form.get("username"):
             return apology("Must provide username", 400)
         if not request.form.get("password"):
@@ -223,9 +226,9 @@ def register():
         
         if password == confirmation:
             password_hash = generate_password_hash(password)
-            user = db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", name, password_hash)
+            db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", name, password_hash)
 
-            session["user_id"] = user
+            session["user_id"] = name
 
             return render_template("index.html")
 
