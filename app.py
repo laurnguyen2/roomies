@@ -54,7 +54,7 @@ def after_request(response):
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("login.html")
 
 @app.route("/index")
 def index():
@@ -82,6 +82,7 @@ def quiz():
         return render_template("quiz.html")
 
 @app.route("/match")
+@login_required
 def match():
     numOfUsers = db.execute("SELECT COUNT(username) FROM users")[0]['COUNT(username)']
     currentUser = db.execute("SELECT * FROM users WHERE username = ?", session["user_id"])
