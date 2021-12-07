@@ -1,9 +1,9 @@
 /* Size for brand */
 nav .navbar-brand
 {
-    font-size: xx-large;
-    color: #163e7d;
+    font-size: large;
 }
+
 
 .orangeButton {
     background-color: #F67282;
@@ -73,4 +73,8 @@ nav .navbar-brand
     font-family: "Trebuchet MS", Helvetica, sans-serif;
     font-size: 25px;
     color: red;
+  }
+
+  .bg-light{
+    color: blue;
   }

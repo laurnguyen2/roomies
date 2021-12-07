@@ -7,6 +7,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required, lookup, usd
+idVal = 0
 
 # Configure application
 app = Flask(__name__)
@@ -95,7 +96,7 @@ def match():
     if userBool == 0:
         return apology("Please fill out quiz first", 400)
     else:
-        for i in range(1, numOfUsers+1):
+        for i in range(numOfUsers):
             selectedUser = db.execute("SELECT * FROM users WHERE ID = ?", i)
             sameAnswers = 0
             print("current user")
@@ -242,8 +243,10 @@ def quote():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    global idVal
     """Register user"""
     if request.method == "POST":
+        print(idVal)
         if not request.form.get("username"):
             return apology("Must provide username", 400)
         if not request.form.get("password"):
@@ -260,9 +263,10 @@ def register():
         
         if password == confirmation:
             password_hash = generate_password_hash(password)
-            db.execute("INSERT INTO users (username, hash, takenForm) VALUES(?, ?, 0)", name, password_hash)
-
+            db.execute("INSERT INTO users (username, hash, takenForm, ID) VALUES(?, ?, 0, ?)", name, password_hash, idVal)
             session["user_id"] = name
+            idVal += 1
+            print(idVal)
 
             return render_template("index.html")
 
