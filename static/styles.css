@@ -40,3 +40,8 @@ nav .navbar-brand .green
   body {
       background-color: #FAAF95;
   }
+
+  .underline {
+    text-decoration: underline;
+  }
+  
