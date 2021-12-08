@@ -6,6 +6,7 @@ Link to video: https://youtu.be/6slF1HLojzA
 User’s Manual
 
 1) Setting Up VS Code
+
 In order to use our program, you must have VS Code, a source-code editor designed for  programming applications and websites, installed and running on your laptop device. 
 
 - Visit https://code.visualstudio.com/ for download links for each of the computer softwares VS Code supports. More specifically, laptop and desktop devices that use Windows, Linus, and macOS will be able to run this application.
@@ -22,6 +23,7 @@ VS Code Explorer tab.
 
 
 2) Flask Tutorial
+
 There are some commands that need to be taken care of first before being able to access the website. Flask, a command able to provide a basic understanding for URL routing and page rendering, needs to be installed in our VS Code in order to get the actual link to our website. 
 - In order to get flask installed in VS Code, visit https://marketplace.visualstudio.com/items?itemName=ms-python.python
   to download the Python extension
