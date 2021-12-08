@@ -36,4 +36,4 @@ The variable maxMatches keeps track of the largest number of matches a user has 
 
 ## Navigation bar
 
-We coded a navigation bar in layout.html. There is an <a> tag with the text “Home” that shows up on the top left of the navigation bar on all pages. We wanted the user to be able to directly get to the starting login in page at any point of navigation. Since all other HTML pages extend layout.html, the navigation bar shows up in all pages. When the user is not logged in, there are also buttons to the registration and login pages. When the user is logged in, there is a button to log out.
+We coded a navigation bar in layout.html. There is an <a> tag with the text “Home” that shows up on the top left of the navigation bar on all pages. We wanted the user to be able to directly get to the starting login in page at any point of navigation. Since all other HTML pages extend layout.html, the navigation bar shows up in all pages. When the user is not logged in, there are also buttons to the registration and login pages. When the user is logged in, there is a button to log out. We also use Bootstrap for styling.
