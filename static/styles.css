@@ -72,6 +72,11 @@ nav .navbar-brand
   .red{
     font-family: "Trebuchet MS", Helvetica, sans-serif;
     font-size: 25px;
-    color: red;
+    color: #ffffff;
   }
 
+  .bg-blue {
+      background-color: #4f5eff;
+  }
+
+  

@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required
 idVal = 0
 
 # Configure application
@@ -14,9 +14,6 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-
-# Custom filter
-app.jinja_env.filters["usd"] = usd
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -36,6 +33,9 @@ def after_request(response):
 
 @app.route("/")
 def home():
+    # Forget any user_id
+    session.clear()
+
     return render_template("login.html")
 
 @app.route("/index")
@@ -46,6 +46,7 @@ def index():
 def quiz():
     """Quiz"""
     if request.method == "POST":
+        # Gather input from the form
         name = request.form.get("name")
         gender = request.form.get("gender")
         year = request.form.get("year")
@@ -55,6 +56,7 @@ def quiz():
         print("id")
         print(session["user_id"])
 
+        # Insert values into SQL database for user
         db.execute("UPDATE users SET Name = ?, Gender = ?, Year = ?, Personality = ?, Sleep = ?, takenForm = 1 WHERE username = ?", name, gender, year, personality, sleep, session["user_id"])
         rows = db.execute("SELECT * FROM users WHERE username = ?", session["user_id"])
         print("after quiz sql")
@@ -67,16 +69,20 @@ def quiz():
 @app.route("/match")
 @login_required
 def match():
+    # Get number of users
     numOfUsers = db.execute("SELECT COUNT(username) FROM users")[0]['COUNT(username)']
+    # Get values from SQL database for current user
     currentUser = db.execute("SELECT * FROM users WHERE username = ?", session["user_id"])
     userBool = currentUser[0]["takenForm"]
     maxMatches = 0
     matchedUser = ""
     print(currentUser)
 
+    # Ensure that user has filled out the quiz
     if userBool == 0:
         return apology("Please fill out quiz first", 400)
     else:
+        # Iterate through all rows and keep track of person with most matches
         for i in range(numOfUsers):
             selectedUser = db.execute("SELECT * FROM users WHERE ID = ?", i)
             sameAnswers = 0
