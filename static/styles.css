@@ -69,7 +69,7 @@ nav .navbar-brand
     font-size: 30px;
   }
 
-  .red{
+  .white{
     font-family: "Trebuchet MS", Helvetica, sans-serif;
     font-size: 25px;
     color: #ffffff;
@@ -77,6 +77,10 @@ nav .navbar-brand
 
   .bg-blue {
       background-color: #4f5eff;
+  }
+
+  .white-text {
+    color: white;
   }
 
   
