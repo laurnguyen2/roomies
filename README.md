@@ -1,4 +1,8 @@
-# Roomies
+# roomies
+cs50 fall 2021 final project
+
+Link to video: https://youtu.be/6slF1HLojzA
+
 User’s Manual
 
 1) Setting Up VS Code
