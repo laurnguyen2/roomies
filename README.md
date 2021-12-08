@@ -1,4 +1,4 @@
-# roomies
+# Roomies
 User’s Manual
 
 1) Setting Up VS Code
