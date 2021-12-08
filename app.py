@@ -7,7 +7,6 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required
-idVal = 0
 
 # Configure application
 app = Flask(__name__)
@@ -105,10 +104,10 @@ def match():
                     sameAnswers += 1
             if sameAnswers > maxMatches:
                 maxMatches = sameAnswers
-                matchedUser = selectedUser[0]["Name"]
+                matchedUser = selectedUser
             print(matchedUser)
-        return render_template("match.html", matchName = matchedUser, matchGender = selectedUser[0]["Gender"], matchYear = selectedUser[0]["Year"], 
-        matchPers = selectedUser[0]["Personality"], matchSleep = selectedUser[0]["Sleep"])
+        return render_template("match.html", matchName = matchedUser[0]["Name"], matchGender = matchedUser[0]["Gender"], matchYear = matchedUser[0]["Year"], 
+        matchPers = matchedUser[0]["Personality"], matchSleep = matchedUser[0]["Sleep"])
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -161,10 +160,8 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    global idVal
     """Register user"""
     if request.method == "POST":
-        print(idVal)
         if not request.form.get("username"):
             return apology("Must provide username", 400)
         if not request.form.get("password"):
@@ -181,10 +178,13 @@ def register():
         
         if password == confirmation:
             password_hash = generate_password_hash(password)
-            db.execute("INSERT INTO users (username, hash, takenForm, ID) VALUES(?, ?, 0, ?)", name, password_hash, idVal)
+            id = db.execute("SELECT * FROM idVal")[0]['id']
+            print(id)
+            db.execute("INSERT INTO users (username, hash, takenForm, ID) VALUES(?, ?, 0, ?)", name, password_hash, id)
             session["user_id"] = name
-            idVal += 1
-            print(idVal)
+            id += 1
+            db.execute("DELETE FROM idVal")
+            db.execute("INSERT INTO idVal VALUES (?)", id)
 
             return render_template("index.html")
 
