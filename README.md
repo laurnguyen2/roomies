@@ -1,5 +1,4 @@
 # roomies
-cs50 fall 2021 final project
 User’s Manual
 
 1) Setting Up VS Code
